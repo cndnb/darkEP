@@ -2,18 +2,30 @@ clear;
 %Initializing vectors
 seattleLat = 0;
 seattleLong = 0;
-compassDir = 0;
+compassDir = pi/2;
 dipoleMag = 1;
                          
-A=1;
+A=0;
 B=1;
 C=1;
 Amp=10;
-omegaComp = 2*pi*100;
+omegaComp = 2*pi*.01;
 
-t=1:31536000; t= t';
-[d1, d2, d3] = dipoleVec(1,seattleLat,seattleLong,compassDir,dipoleMag)
-[fS1, fS2, fS3] = fakeSignal(1,Amp,omegaComp,A,B,C)
-
-plot(t,dot(d(t),fS(t)));
+t=1:86165/5;%31536000; 
+t= t';
+dV = [];
+for i=1:length(t)
+  dV = [dV; dipoleVec(i,seattleLat,seattleLong,compassDir,dipoleMag)];
+endfor
+fS = [];
+for j=1:length(t)
+  fS = [fS; fakeSignal(j,Amp, omegaComp, A, B, C)];
+endfor
+%Constructs matrix for plotting
+out = [];
+for k=1:length(t)
+out = [out; k,dot(dV(k,2:4),fS(k,2:4))];
+endfor
+%Plot!
+plot(out(:,1),out(:,2));
 
