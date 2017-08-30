@@ -1,8 +1,9 @@
 %Constructs a time dependent Seattle dipole vector
+%Arguments in units of (seconds, decimal degrees, " ", " ", magnitude of dipole)
 function ret = dipoleVec(t, seattleLat, seattleLong, compassDir, dM)
-  oE = 2*pi*(1/86164.0916);
-  A = ones(length(t),1).*dM*cos(compassDir)*cos(seattleLong);
-  B = dM*sin(compassDir)*sin(seattleLat + oE.*t);
-  C = dM*sin(compassDir)*cos(seattleLong+ oE.*t);
+  global omegaEarth;
+  A = ones(length(t),1).*dM*cos(deg2rad(compassDir))*cos(deg2rad(seattleLong));
+  B = dM*sin(deg2rad(compassDir))*sin(deg2rad(seattleLat) + omegaEarth.*t);
+  C = dM*sin(deg2rad(compassDir))*cos(deg2rad(seattleLat) + omegaEarth.*t);
   ret = [t, A, B, C];
 endfunction
